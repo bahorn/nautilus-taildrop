@@ -43,20 +43,17 @@ class Taildrop:
         """
         Invoke the tailscale binary to send a file.
         """
-        subprocess.run(
-            ['tailscale', 'file', 'cp', path, host + ':'],
-            check=False
-        )
+        subprocess.Popen(['tailscale', 'file', 'cp', path, host + ':'])
 
     @staticmethod
     def get_file(path='.'):
         """
         Invoke the tailscale binary to receive a file.
         """
-        subprocess.run(
-            ['tailscale', 'file', 'get', path],
-            check=False
-        )
+        subprocess.Popen(['tailscale', 'file', 'get', path])
+        # hack, stolen from:
+        # https://github.com/brunonova/nautilus-hide/blob/master/extension/nautilus-hide.py#L124
+        subprocess.Popen(['xdotool', 'key', 'F5'])
 
 
 class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
