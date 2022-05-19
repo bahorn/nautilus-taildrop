@@ -51,9 +51,6 @@ class Taildrop:
         Invoke the tailscale binary to receive a file.
         """
         subprocess.Popen(['tailscale', 'file', 'get', path])
-        # hack, stolen from:
-        # https://github.com/brunonova/nautilus-hide/blob/master/extension/nautilus-hide.py#L124
-        subprocess.Popen(['xdotool', 'key', 'F5'])
 
 
 class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
@@ -63,14 +60,19 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
     def __init__(self):
         pass
 
-    def callback_recv(self, _menu, directory):
+    @staticmethod
+    def callback_recv(_menu, directory):
         """
         Callback handler for receiving files.
         """
         filename = unquote(directory.get_uri()[7:])
         Taildrop.get_file(filename)
+        # hack, stolen from:
+        # https://github.com/brunonova/nautilus-hide/blob/master/extension/nautilus-hide.py#L124
+        subprocess.Popen(['xdotool', 'key', 'F5'])
 
-    def callback_send(self, _menu, hostname, files):
+    @staticmethod
+    def callback_send(_menu, hostname, files):
         """
         Callback Handler for sending files to a host.
         """
@@ -79,7 +81,7 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             print(filename)
             Taildrop.send_file(filename, hostname)
 
-    def get_file_items(self, window, files):
+    def get_file_items(self, _window, files):
         """
         Right click context menu for a batch of files.
         """
@@ -105,7 +107,7 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             )
             sub_menuitem.connect(
                 'activate',
-                self.callback_send, details['hostname'], files
+                TaildropMenuProvider.callback_send, details['hostname'], files
             )
             submenu.append_item(sub_menuitem)
 
@@ -123,7 +125,7 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
         )
         top_menuitem.connect(
             'activate',
-            self.callback_recv, file
+            TaildropMenuProvider.callback_recv, file
         )
 
         return (top_menuitem,)
