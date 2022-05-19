@@ -66,9 +66,16 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
     def __init__(self):
         pass
 
-    def callback(self, _menu, hostname, files):
+    def callback_recv(self, _menu, directory):
         """
-        Callback Handler
+        Callback handler for receiving files.
+        """
+        filename = unquote(directory.get_uri()[7:])
+        Taildrop.get_file(filename)
+
+    def callback_send(self, _menu, hostname, files):
+        """
+        Callback Handler for sending files to a host.
         """
         for file in files:
             filename = unquote(file.get_uri()[7:])
@@ -76,6 +83,9 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             Taildrop.send_file(filename, hostname)
 
     def get_file_items(self, window, files):
+        """
+        Right click context menu for a batch of files.
+        """
         top_menuitem = Nautilus.MenuItem(
             name='TaildropMenuProvider::Devices',
             label='Taildrop',
@@ -98,7 +108,7 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             )
             sub_menuitem.connect(
                 'activate',
-                self.callback, details['hostname'], files
+                self.callback_send, details['hostname'], files
             )
             submenu.append_item(sub_menuitem)
 
@@ -106,35 +116,17 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
 
     def get_background_items(self, window, file):
         """
-        Tbh not quite sure what this one does, but it's a thing.
-
-        And yep, seems this does have to be a repeated copy of the above
-        function.
+        Adds the context menu to a folder.
         """
         top_menuitem = Nautilus.MenuItem(
-            name='TaildropMenuProvider::BDevices',
-            label='Taildrop',
+            name='TaildropMenuProvider::BackgroundRecieve',
+            label='Taildrop Receive',
             tip='',
             icon=''
         )
-
-        submenu = Nautilus.Menu()
-        top_menuitem.set_submenu(submenu)
-
-        for idx, details in enumerate(Taildrop.find_hosts()):
-            if not details['online']:
-                continue
-
-            sub_menuitem = Nautilus.MenuItem(
-                name='TaildropMenuProvider::BDevice%i' % idx,
-                label="%s - %s" % (details['hostname'], details['os']),
-                tip='',
-                icon=''
-            )
-            sub_menuitem.connect(
-                'activate',
-                self.callback, details['hostname'], [file]
-            )
-            submenu.append_item(sub_menuitem)
+        top_menuitem.connect(
+            'activate',
+            self.callback_recv, file
+        )
 
         return (top_menuitem,)
