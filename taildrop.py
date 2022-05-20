@@ -78,7 +78,6 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
         """
         for file in files:
             filename = unquote(file.get_uri()[7:])
-            print(filename)
             Taildrop.send_file(filename, hostname)
 
     def get_file_items(self, _window, files):

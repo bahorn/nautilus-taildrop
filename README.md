@@ -6,6 +6,9 @@ Nautilus extension that integrates with
 Essentially, adds a context menu item to nautilus so you can send / receive
 files.
 
+As everyone loves a demo, there is one
+[here.](https://www.youtube.com/watch?v=KXvxQX_CKx4)
+
 ## Install
 
 What I do on my Ubuntu box, might vary between distribution:
