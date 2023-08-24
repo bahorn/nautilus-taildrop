@@ -80,7 +80,7 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             filename = unquote(file.get_uri()[7:])
             Taildrop.send_file(filename, hostname)
 
-    def get_file_items(self, _window, files):
+    def get_file_items(self, files):
         """
         Right click context menu for a batch of files.
         """
@@ -112,7 +112,7 @@ class TaildropMenuProvider(GObject.GObject, Nautilus.MenuProvider):
 
         return (top_menuitem,)
 
-    def get_background_items(self, window, file):
+    def get_background_items(self, file):
         """
         Adds the context menu to a folder.
         """
