@@ -30,6 +30,9 @@ class Taildrop:
         status = json.loads(process.stdout)
         items = []
         for _host, data in status['Peer'].items():
+            if data['HostName'] == "funnel-ingress-node":
+                continue
+
             items.append({
                 'hostname': data['HostName'],
                 'os': data['OS'],
