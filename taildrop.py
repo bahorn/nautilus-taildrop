@@ -34,7 +34,7 @@ class Taildrop:
                 continue
 
             items.append({
-                'hostname': data['HostName'],
+                'hostname': data['DNSName'],
                 'os': data['OS'],
                 'online': data['Online']
             })
