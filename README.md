@@ -16,7 +16,7 @@ What I do on my Ubuntu box, might vary between distribution:
 ```
 sudo apt update
 sudo apt install python3-nautilus
-mdkir -p ~/.local/share/nautilus-python/extensions/
+mkdir -p ~/.local/share/nautilus-python/extensions/
 cp taildrop.py ~/.local/share/nautilus-python/extensions/
 ```
 
