@@ -28,8 +28,11 @@ class Taildrop:
             check=False
         )
         status = json.loads(process.stdout)
+        user_id = status['Self']['UserID']
         items = []
         for _host, data in status['Peer'].items():
+            if data['UserID'] != user_id:
+                continue
             if data['HostName'] == "funnel-ingress-node":
                 continue
 
